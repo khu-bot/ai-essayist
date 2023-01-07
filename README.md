@@ -11,7 +11,7 @@
 ### kogpt2-base-v2
 
 ```sh
-$ python train.py \
+$ python -m scripts.train \
     --model "skt/kogpt2-base-v2" \
     --dataset-dir dataset-v1/ \
     --output-dir baseline-sk-kogpt2-v2 \
@@ -21,7 +21,7 @@ $ python train.py \
 ### kogpt2
 
 ```sh
-python train.py \
+python -m scripts.train \
     --model "skt/ko-gpt-trinity-1.2B-v0.5" \
     --dataset-dir dataset-v1/ \
     --batch-size 3 \

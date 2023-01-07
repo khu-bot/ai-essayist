@@ -24,12 +24,15 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
         max_length: token max length
     """
 
-    def __init__(self, data: List[str], tokenizer: AutoTokenizer, max_length: int) -> None:
+    def __init__(
+        self, data: List[str], tokenizer: AutoTokenizer, max_length: int, use_token_type_ids: bool = True
+    ) -> None:
         super().__init__()
 
         self.data = data
         self.tokenizer = tokenizer
         self.max_length = max_length
+        self.use_token_type_ids = use_token_type_ids
 
     def __len__(self) -> int:
         return len(self.data)
@@ -43,6 +46,7 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
             truncation=True,
             padding="max_length",
             return_tensors="pt",
+            return_token_type_ids=self.use_token_type_ids,
         )
         inputs = {k: v.squeeze(dim=0) for k, v in inputs.items()}
         inputs["labels"] = inputs["input_ids"]

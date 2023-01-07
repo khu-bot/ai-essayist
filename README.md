@@ -31,3 +31,17 @@ python -m scripts.train \
     --output-dir baseline-sk-trinity
 ```
 - 트리니티의 경우 모델이 크기 때문에 FP16과 deepspeed를 모두 적용해야 16GB 이내의 메모리로 학습할 수 있습니다.
+
+### Polyglot 1.3B
+
+```sh
+python -m scripts.train \
+    --model "EleutherAI/polyglot-ko-1.3b" \
+    --dataset-dir dataset-v1/ \
+    --batch-size 3 \
+    --precision 16 \
+    --strategy deepspeed \
+    --accumulate-grad-batches 4 \
+    --output-dir baseline-polyglot-1.3b \
+    --disable-token-type-ids
+```

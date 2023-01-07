@@ -5,10 +5,9 @@ import pytorch_lightning as pl
 import torch
 from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
+from pytorch_lightning.strategies import DeepSpeedStrategy
 from torch.utils.data import DataLoader
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from pytorch_lightning.strategies import DeepSpeedStrategy
-
 
 from essayist.data import Datum, LanguageModelingDataset, load_jsonl_data
 from essayist.task import LanguageModeling
@@ -77,14 +76,17 @@ def main(args: argparse.Namespace):
     if args.tokenizer is None:
         args.tokenizer = args.model
     logger.info(f'[+] Load Tokenizer: "{args.tokenizer}"')
-    tokenizer = AutoTokenizer.from_pretrained(
-        args.tokenizer,
-        bos_token="</s>",
-        eos_token="</s>",
-        unk_token="<unk>",
-        pad_token="<pad>",
-        mask_token="<mask>",
-    )
+    if args.tokenizer.startswith("skt/"):
+        tokenizer_kwargs = dict(
+            bos_token="</s>",
+            eos_token="</s>",
+            unk_token="<unk>",
+            pad_token="<pad>",
+            mask_token="<mask>",
+        )
+    else:
+        tokenizer_kwargs = {}
+    tokenizer = AutoTokenizer.from_pretrained(args.tokenizer, **tokenizer_kwargs)
 
     logger.info(f'[+] Load Model: "{args.model}"')
     model = AutoModelForCausalLM.from_pretrained(args.model)
@@ -107,12 +109,8 @@ def main(args: argparse.Namespace):
         num_workers=os.cpu_count() // 2,
         pin_memory=True,
     )
-    dev_dataloader = DataLoader(
-        dev_dataset, batch_size=args.valid_batch_size
-    )
-    test_dataloader = DataLoader(
-        test_dataset, batch_size=args.valid_batch_size
-    )
+    dev_dataloader = DataLoader(dev_dataset, batch_size=args.valid_batch_size)
+    test_dataloader = DataLoader(test_dataset, batch_size=args.valid_batch_size)
 
     total_steps = len(train_dataloader) * args.epochs
 
@@ -157,9 +155,7 @@ def main(args: argparse.Namespace):
         log_every_n_steps=args.logging_interval,
         val_check_interval=args.evaluate_interval,
         accumulate_grad_batches=args.accumulate_grad_batches,
-        callbacks=[LearningRateMonitor(logging_interval="step")]
-        if train_loggers
-        else [],
+        callbacks=[LearningRateMonitor(logging_interval="step")] if train_loggers else [],
         strategy=args.strategy,
         accelerator="gpu" if args.gpus else None,
         devices=max(args.gpus, 1),

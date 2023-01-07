@@ -128,7 +128,7 @@ class LanguageModeling(pl.LightningModule):
                 self.model_save_dir,
                 f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_loss_mean:.4f}loss",
             )
-            torch.save(self.model.state_dict(), model_save_path)
+            self.model.save_pretrained(model_save_path)
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         checkpoint["model_config"] = self.model.config.to_dict()

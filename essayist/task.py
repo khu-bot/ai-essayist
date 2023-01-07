@@ -3,9 +3,8 @@ from typing import Any, Dict, Literal
 
 import pytorch_lightning as pl
 import torch
-from transformers import (AutoConfig, AutoModelForCausalLM,
-                          get_linear_schedule_with_warmup)
 from deepspeed.ops.adam import DeepSpeedCPUAdam
+from transformers import AutoConfig, AutoModelForCausalLM, get_linear_schedule_with_warmup
 
 
 class LanguageModeling(pl.LightningModule):
@@ -27,7 +26,7 @@ class LanguageModeling(pl.LightningModule):
         learning_rate: float,
         warmup_rate: float,
         model_save_dir: str,
-        optimizer_name: Literal["adam", "deepspeed"]="adam",
+        optimizer_name: Literal["adam", "deepspeed"] = "adam",
     ):
         super().__init__()
 
@@ -49,9 +48,7 @@ class LanguageModeling(pl.LightningModule):
             }
         )
 
-    def training_step(
-        self, batch: Dict[str, torch.Tensor], batch_idx: int
-    ) -> Dict[str, float]:
+    def training_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> Dict[str, float]:
         """Train step function
 
         Args:
@@ -67,9 +64,7 @@ class LanguageModeling(pl.LightningModule):
         self.log_dict(metrics, prog_bar=True, logger=True, on_step=True, sync_dist=True)
         return metrics
 
-    def validation_step(
-        self, batch: Dict[str, torch.Tensor], batch_idx: int
-    ) -> Dict[str, float]:
+    def validation_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> Dict[str, float]:
         """Validation step function
 
         Args:
@@ -85,9 +80,7 @@ class LanguageModeling(pl.LightningModule):
         self.log_dict(metrics, prog_bar=True, logger=True, on_step=True, sync_dist=True)
         return metrics
 
-    def test_step(
-        self, batch: Dict[str, torch.Tensor], batch_idx: int
-    ) -> Dict[str, float]:
+    def test_step(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> Dict[str, float]:
         """Test step function
 
         Args:
@@ -105,9 +98,7 @@ class LanguageModeling(pl.LightningModule):
 
     def configure_optimizers(self) -> Dict:
         if self.optimizer_name == "deepspeed":
-            optimizer = DeepSpeedCPUAdam(
-                self.model.parameters(), lr=self.learning_rate
-            )
+            optimizer = DeepSpeedCPUAdam(self.model.parameters(), lr=self.learning_rate)
         else:
             optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         optimizers = {"optimizer": optimizer}

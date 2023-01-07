@@ -24,9 +24,7 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
         max_length: token max length
     """
 
-    def __init__(
-        self, data: List[str], tokenizer: AutoTokenizer, max_length: int
-    ) -> None:
+    def __init__(self, data: List[str], tokenizer: AutoTokenizer, max_length: int) -> None:
         super().__init__()
 
         self.data = data

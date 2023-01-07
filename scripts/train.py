@@ -46,7 +46,13 @@ g.add_argument("--wandb-project", type=str, default="ai-bookathon", help="wanDB 
 
 
 def datum_to_string(datum: Datum):
-    return f"제목: {datum['title']}\n{datum['content']}"
+    text = f"제목: {datum['title']}\n{datum['content']}"
+
+    summarizations = datum.get("summarizations")
+    if summarizations:
+        summarization = " ".join(summarizations).replace("\n", )
+        text = f"요약: {summarization}\n" + text
+    return text
 
 
 def main(args: argparse.Namespace):

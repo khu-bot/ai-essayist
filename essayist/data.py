@@ -1,5 +1,5 @@
 import json
-from typing import Dict, List, TypedDict
+from typing import Dict, List, TypedDict, Optional
 
 import torch
 from transformers import AutoTokenizer
@@ -8,6 +8,7 @@ from transformers import AutoTokenizer
 class Datum(TypedDict):
     title: str
     content: str
+    summarizations: Optional[List[str]]
 
 
 def load_jsonl_data(path: str) -> List[Datum]:

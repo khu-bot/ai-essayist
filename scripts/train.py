@@ -83,16 +83,6 @@ def main(args: argparse.Namespace):
     if args.tokenizer is None:
         args.tokenizer = args.model
     logger.info(f'[+] Load Tokenizer: "{args.tokenizer}"')
-    if args.tokenizer.startswith("skt/"):
-        tokenizer_kwargs = dict(
-            bos_token="</s>",
-            eos_token="</s>",
-            unk_token="<unk>",
-            pad_token="<pad>",
-            mask_token="<mask>",
-        )
-    else:
-        tokenizer_kwargs = {}
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer, **tokenizer_kwargs)
 
     logger.info(f'[+] Load Model: "{args.model}"')

@@ -50,7 +50,7 @@ def datum_to_string(datum: Datum):
 
     summarizations = datum.get("summarizations")
     if summarizations:
-        summarization = " ".join(summarizations).replace("\n", )
+        summarization = " ".join(summarizations).replace("\n", " ")
         text = f"요약: {summarization}\n" + text
     return text
 

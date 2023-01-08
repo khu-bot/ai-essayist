@@ -4,6 +4,8 @@ from typing import Dict, List, Optional, Tuple, TypedDict
 import torch
 from transformers import AutoTokenizer
 
+from .utils import normalize_text
+
 
 class Datum(TypedDict):
     title: str
@@ -47,6 +49,7 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
     def __getitem__(self, index: int) -> Dict[str, torch.Tensor]:
         datum = self.data[index]
         prompt, content = self.datum_to_string(datum)
+        content = normalize_text(content)
         return self.create_tokenizer_inputs(prompt, content)
 
     @staticmethod

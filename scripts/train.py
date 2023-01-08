@@ -9,7 +9,7 @@ from pytorch_lightning.strategies import DeepSpeedStrategy
 from torch.utils.data import DataLoader
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from essayist.data import Datum, LanguageModelingDataset, load_jsonl_data
+from essayist.data import LanguageModelingDataset, load_jsonl_data
 from essayist.task import LanguageModeling
 from essayist.utils import get_logger
 
@@ -45,16 +45,6 @@ g.add_argument("--wandb-project", type=str, default="ai-bookathon", help="wanDB 
 # fmt: on
 
 
-def datum_to_string(datum: Datum):
-    text = f"제목: {datum['title']}\n{datum['content']}"
-
-    summarizations = datum.get("summarizations")
-    if summarizations:
-        summarization = " ".join(summarizations).replace("\n", " ")
-        text = f"요약: {summarization}\n" + text
-    return text
-
-
 def main(args: argparse.Namespace):
     logger = get_logger("train")
 
@@ -76,9 +66,9 @@ def main(args: argparse.Namespace):
     dev_data_path = os.path.join(args.dataset_dir, "dev.jsonl")
     test_data_path = os.path.join(args.dataset_dir, "test.jsonl")
 
-    train_data = [datum_to_string(datum) for datum in load_jsonl_data(train_data_path)]
-    dev_data = [datum_to_string(datum) for datum in load_jsonl_data(dev_data_path)]
-    test_data = [datum_to_string(datum) for datum in load_jsonl_data(test_data_path)]
+    train_data = [datum for datum in load_jsonl_data(train_data_path)]
+    dev_data = [datum for datum in load_jsonl_data(dev_data_path)]
+    test_data = [datum for datum in load_jsonl_data(test_data_path)]
 
     if args.tokenizer is None:
         args.tokenizer = args.model

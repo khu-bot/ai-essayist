@@ -1,5 +1,5 @@
 import json
-from typing import Dict, List, TypedDict, Optional
+from typing import Dict, List, Optional, TypedDict
 
 import torch
 from transformers import AutoTokenizer
@@ -26,7 +26,7 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
     """
 
     def __init__(
-        self, data: List[str], tokenizer: AutoTokenizer, max_length: int, use_token_type_ids: bool = True
+        self, data: List[Datum], tokenizer: AutoTokenizer, max_length: int, use_token_type_ids: bool = True
     ) -> None:
         super().__init__()
 
@@ -39,7 +39,7 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
         return len(self.data)
 
     def __getitem__(self, index: int) -> Dict[str, torch.Tensor]:
-        text = self.data[index]
+        text = self.datum_to_string(self.data[index])
         inputs = self.tokenizer(
             text,
             add_special_tokens=True,
@@ -53,3 +53,13 @@ class LanguageModelingDataset(torch.utils.data.Dataset):
         inputs["labels"] = inputs["input_ids"]
 
         return inputs
+
+    @staticmethod
+    def datum_to_string(datum: Datum):
+        text = f"제목: {datum['title']}\n{datum['content']}"
+
+        summarizations = datum.get("summarizations")
+        if summarizations:
+            summarization = " ".join(summarizations).replace("\n", " ")
+            text = f"요약: {summarization}\n" + text
+        return text

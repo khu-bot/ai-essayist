@@ -4,7 +4,7 @@ from typing import Any, Dict, Literal, Optional
 import pytorch_lightning as pl
 import torch
 from deepspeed.ops.adam import DeepSpeedCPUAdam
-from transformers import AutoConfig, AutoModelForCausalLM, get_linear_schedule_with_warmup, AutoTokenizer
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, get_linear_schedule_with_warmup
 
 
 class LanguageModeling(pl.LightningModule):

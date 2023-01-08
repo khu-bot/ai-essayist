@@ -83,7 +83,7 @@ def main(args: argparse.Namespace):
     if args.tokenizer is None:
         args.tokenizer = args.model
     logger.info(f'[+] Load Tokenizer: "{args.tokenizer}"')
-    tokenizer = AutoTokenizer.from_pretrained(args.tokenizer, **tokenizer_kwargs)
+    tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 
     logger.info(f'[+] Load Model: "{args.model}"')
     model = AutoModelForCausalLM.from_pretrained(args.model)

@@ -23,6 +23,7 @@ g.add_argument("--tokenizer", type=str, help="huggingface tokenizer, use model b
 g.add_argument("--batch-size", type=int, default=3, help="training batch size")
 g.add_argument("--valid-batch-size", type=int, default=4, help="validation batch size")
 g.add_argument("--accumulate-grad-batches", type=int, default=1, help="the number of gradident accumulation steps")
+g.add_argument("--prompt-max-length", type=int, default=128, help="prompt max length")
 g.add_argument("--max-length", type=int, default=512, help="max sequence length")
 g.add_argument("--epochs", type=int, default=1, help="the number of training epochs")
 g.add_argument("--learning-rate", type=float, default=3e-5, help="learning rate")
@@ -78,9 +79,15 @@ def main(args: argparse.Namespace):
     logger.info(f'[+] Load Model: "{args.model}"')
     model = AutoModelForCausalLM.from_pretrained(args.model)
 
-    train_dataset = LanguageModelingDataset(train_data, tokenizer, args.max_length, not args.disable_token_type_ids)
-    dev_dataset = LanguageModelingDataset(dev_data, tokenizer, args.max_length, not args.disable_token_type_ids)
-    test_dataset = LanguageModelingDataset(test_data, tokenizer, args.max_length, not args.disable_token_type_ids)
+    train_dataset = LanguageModelingDataset(
+        train_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+    )
+    dev_dataset = LanguageModelingDataset(
+        dev_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+    )
+    test_dataset = LanguageModelingDataset(
+        test_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+    )
 
     logger.info(f"[+] # of train examples: {len(train_dataset)}")
     logger.info(f"[+] # of dev examples: {len(dev_dataset)}")

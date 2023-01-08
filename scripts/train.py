@@ -133,6 +133,7 @@ def main(args: argparse.Namespace):
         warmup_rate=args.warmup_rate,
         model_save_dir=model_dir,
         optimizer_name=optimizer_name,
+        tokenizer=tokenizer,
     )
 
     logger.info(f"[+] Start Training")

@@ -1,10 +1,10 @@
 import os
-from typing import Any, Dict, Literal
+from typing import Any, Dict, Literal, Optional
 
 import pytorch_lightning as pl
 import torch
 from deepspeed.ops.adam import DeepSpeedCPUAdam
-from transformers import AutoConfig, AutoModelForCausalLM, get_linear_schedule_with_warmup
+from transformers import AutoConfig, AutoModelForCausalLM, get_linear_schedule_with_warmup, AutoTokenizer
 
 
 class LanguageModeling(pl.LightningModule):
@@ -27,6 +27,7 @@ class LanguageModeling(pl.LightningModule):
         warmup_rate: float,
         model_save_dir: str,
         optimizer_name: Literal["adam", "deepspeed"] = "adam",
+        tokenizer: Optional[AutoTokenizer] = None,
     ):
         super().__init__()
 
@@ -37,6 +38,7 @@ class LanguageModeling(pl.LightningModule):
         self.warmup_rate = warmup_rate
         self.model_save_dir = model_save_dir
         self.optimizer_name = optimizer_name
+        self.tokenizer = tokenizer
 
         self.save_hyperparameters(
             {
@@ -45,6 +47,7 @@ class LanguageModeling(pl.LightningModule):
                 "learning_rate": learning_rate,
                 "warmup_rate": warmup_rate,
                 "model_save_dir": model_save_dir,
+                "tokenizer": None,
             }
         )
 
@@ -121,14 +124,15 @@ class LanguageModeling(pl.LightningModule):
         outputs = self.all_gather(outputs)
 
         if self.trainer.is_global_zero and self.model_save_dir:
-            val_losses = [output["val-loss"].mean() for output in outputs]
-            val_loss_mean = sum(val_losses) / len(val_losses)
+            val_ppls = [output["val-ppl"].mean() for output in outputs]
+            val_ppl_mean = sum(val_ppls) / len(val_ppls)
 
             model_save_path = os.path.join(
                 self.model_save_dir,
-                f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_loss_mean:.4f}loss",
+                f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_ppl_mean:.4f}ppl",
             )
             self.model.save_pretrained(model_save_path)
+            self.tokenizer.save_pretrained(model_save_path)
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         checkpoint["model_config"] = self.model.config.to_dict()

@@ -32,7 +32,7 @@ g.add_argument("--warmup-rate", type=float, default=0.06, help="warmup step rate
 g.add_argument("--seed", type=int, default=42, help="random seed")
 g.add_argument("--precision", type=int, default=32, choices=[16, 32])
 g.add_argument("--strategy", type=str, default="ddp", choices=["deepspeed", "ddp"])
-g.add_argument("--disable-token-type-ids", action="store_true")
+g.add_argument("--use-token-type-ids", action="store_true")
 
 g = parser.add_argument_group("Personal Options")
 g.add_argument("--output-dir", type=str, help="output directory path to save artifacts")
@@ -103,13 +103,13 @@ def main(args: argparse.Namespace):
     model = AutoModelForCausalLM.from_pretrained(args.model)
 
     train_dataset = LanguageModelingDataset(
-        train_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+        train_data, tokenizer, args.prompt_max_length, args.max_length, args.use_token_type_ids
     )
     dev_dataset = LanguageModelingDataset(
-        dev_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+        dev_data, tokenizer, args.prompt_max_length, args.max_length, args.use_token_type_ids
     )
     test_dataset = LanguageModelingDataset(
-        test_data, tokenizer, args.prompt_max_length, args.max_length, not args.disable_token_type_ids
+        test_data, tokenizer, args.prompt_max_length, args.max_length, args.use_token_type_ids
     )
 
     logger.info(f"[+] # of train examples: {len(train_dataset)}")

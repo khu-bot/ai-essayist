@@ -18,7 +18,7 @@ $ python -m scripts.train \
     --batch-size 8        
 ```
 
-### kogpt2
+### ko-gpt-trinity
 
 ```sh
 python -m scripts.train \

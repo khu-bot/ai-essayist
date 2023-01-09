@@ -3,3 +3,5 @@ pytorch-lightning
 transformers
 wandb
 deepspeed
+
+# `proto` custom package for competition logging

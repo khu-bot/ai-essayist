@@ -83,17 +83,17 @@ def main(args: argparse.Namespace):
     dev_data = [normalize_datum(datum) for datum in load_jsonl_data(dev_data_path)]
     test_data = [normalize_datum(datum) for datum in load_jsonl_data(test_data_path)]
 
-    logger.filter(f"[+] Loaded train data: {len(train_data)}")
-    logger.filter(f"[+] Loaded dev data: {len(dev_data)}")
-    logger.filter(f"[+] Loaded test data: {len(test_data)}")
+    logger.info(f"[+] Loaded train data: {len(train_data)}")
+    logger.info(f"[+] Loaded dev data: {len(dev_data)}")
+    logger.info(f"[+] Loaded test data: {len(test_data)}")
 
     train_data = [datum for datum in train_data if not filter_datum(datum, args.min_content_char)]
     dev_data = [datum for datum in dev_data if not filter_datum(datum, args.min_content_char)]
     test_data = [datum for datum in test_data if not filter_datum(datum, args.min_content_char)]
 
-    logger.filter(f"[+] Remain train data after filtering: {len(train_data)}")
-    logger.filter(f"[+] Remain dev data after filtering: {len(dev_data)}")
-    logger.filter(f"[+] Remain test data after filtering: {len(test_data)}")
+    logger.info(f"[+] Remain train data after filtering: {len(train_data)}")
+    logger.info(f"[+] Remain dev data after filtering: {len(dev_data)}")
+    logger.info(f"[+] Remain test data after filtering: {len(test_data)}")
 
     if args.tokenizer is None:
         args.tokenizer = args.model

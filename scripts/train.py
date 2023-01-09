@@ -33,6 +33,7 @@ g.add_argument("--seed", type=int, default=42, help="random seed")
 g.add_argument("--precision", type=int, default=32, choices=[16, 32])
 g.add_argument("--strategy", type=str, default="ddp", choices=["deepspeed", "ddp"])
 g.add_argument("--use-token-type-ids", action="store_true")
+g.add_argument("--prompt-for-logging", type=str, default="제목: 거짓말에는 종점이 있다\n")
 
 g = parser.add_argument_group("Personal Options")
 g.add_argument("--output-dir", type=str, help="output directory path to save artifacts")
@@ -154,6 +155,7 @@ def main(args: argparse.Namespace):
         model_save_dir=model_dir,
         optimizer_name=optimizer_name,
         tokenizer=tokenizer,
+        prompt_for_logging=args.prompt_for_logging,
     )
 
     logger.info(f"[+] Start Training")

@@ -9,9 +9,9 @@ from pytorch_lightning.strategies import DeepSpeedStrategy
 from torch.utils.data import DataLoader
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from essayist.data import LanguageModelingDataset, load_jsonl_data
+from essayist.data import Datum, LanguageModelingDataset, load_jsonl_data
 from essayist.task import LanguageModeling
-from essayist.utils import get_logger
+from essayist.utils import get_logger, normalize_text
 
 # fmt: off
 parser = argparse.ArgumentParser(prog="train")
@@ -24,6 +24,7 @@ g.add_argument("--batch-size", type=int, default=3, help="training batch size")
 g.add_argument("--valid-batch-size", type=int, default=4, help="validation batch size")
 g.add_argument("--accumulate-grad-batches", type=int, default=1, help="the number of gradident accumulation steps")
 g.add_argument("--prompt-max-length", type=int, default=128, help="prompt max length")
+g.add_argument("--min-content-char", type=int, default=100, help="filter less than this number of content")
 g.add_argument("--max-length", type=int, default=512, help="max sequence length")
 g.add_argument("--epochs", type=int, default=1, help="the number of training epochs")
 g.add_argument("--learning-rate", type=float, default=3e-5, help="learning rate")
@@ -44,6 +45,16 @@ g.add_argument("--wandb-run-name", type=str, help="wanDB run name")
 g.add_argument("--wandb-entity", type=str, default="khu-bot", help="wanDB entity name")
 g.add_argument("--wandb-project", type=str, default="ai-bookathon", help="wanDB project name")
 # fmt: on
+
+
+def normalize_datum(datum: Datum) -> Datum:
+    datum["title"] = datum["title"].strip()
+    datum["content"] = normalize_text(datum["content"])
+    return datum
+
+
+def filter_datum(datum: Datum, min_length: int) -> Datum:
+    return not datum["title"] or len(datum["content"]) < min_length
 
 
 def main(args: argparse.Namespace):
@@ -67,9 +78,21 @@ def main(args: argparse.Namespace):
     dev_data_path = os.path.join(args.dataset_dir, "dev.jsonl")
     test_data_path = os.path.join(args.dataset_dir, "test.jsonl")
 
-    train_data = [datum for datum in load_jsonl_data(train_data_path)]
-    dev_data = [datum for datum in load_jsonl_data(dev_data_path)]
-    test_data = [datum for datum in load_jsonl_data(test_data_path)]
+    train_data = [normalize_datum(datum) for datum in load_jsonl_data(train_data_path)]
+    dev_data = [normalize_datum(datum) for datum in load_jsonl_data(dev_data_path)]
+    test_data = [normalize_datum(datum) for datum in load_jsonl_data(test_data_path)]
+
+    logger.filter(f"[+] Loaded train data: {len(train_data)}")
+    logger.filter(f"[+] Loaded dev data: {len(dev_data)}")
+    logger.filter(f"[+] Loaded test data: {len(test_data)}")
+
+    train_data = [datum for datum in train_data if not filter_datum(datum, args.min_content_char)]
+    dev_data = [datum for datum in dev_data if not filter_datum(datum, args.min_content_char)]
+    test_data = [datum for datum in test_data if not filter_datum(datum, args.min_content_char)]
+
+    logger.filter(f"[+] Remain train data after filtering: {len(train_data)}")
+    logger.filter(f"[+] Remain dev data after filtering: {len(dev_data)}")
+    logger.filter(f"[+] Remain test data after filtering: {len(test_data)}")
 
     if args.tokenizer is None:
         args.tokenizer = args.model

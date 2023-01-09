@@ -31,13 +31,16 @@ def get_logger(name: str) -> logging.Logger:
         logger.addHandler(handler)
     return logger
 
-def filter_condition(text: str, long_length: int= 200, short_length: int = 40) -> bool:
+
+def filter_condition(text: str, long_length: int = 200, short_length: int = 40) -> bool:
     return (
-        len(text) < long_length and(
-        URL_PATTERN.search(text)
-        or ID_TAG_PATTERN.search(text)
-        or BULLET_PATTERN.fullmatch(text)
-        or EMAIL_PATTERN.search(text))
+        len(text) < long_length
+        and (
+            URL_PATTERN.search(text)
+            or ID_TAG_PATTERN.search(text)
+            or BULLET_PATTERN.fullmatch(text)
+            or EMAIL_PATTERN.search(text)
+        )
         or (
             len(text) < short_length
             and (

@@ -28,6 +28,7 @@ g.add_argument("--min-content-char", type=int, default=100, help="filter less th
 g.add_argument("--max-length", type=int, default=512, help="max sequence length")
 g.add_argument("--epochs", type=int, default=1, help="the number of training epochs")
 g.add_argument("--learning-rate", type=float, default=5e-5, help="learning rate")
+g.add_argument("--weight-decay", type=float, default=0.01, help="weight decay")
 g.add_argument("--warmup-rate", type=float, default=0.06, help="warmup step rate")
 g.add_argument("--seed", type=int, default=42, help="random seed")
 g.add_argument("--precision", type=int, default=32, choices=[16, 32])
@@ -151,6 +152,7 @@ def main(args: argparse.Namespace):
         model=model,
         total_steps=total_steps,
         learning_rate=args.learning_rate,
+        weight_decay=args.weight_decay,
         warmup_rate=args.warmup_rate,
         model_save_dir=model_dir,
         optimizer_name=optimizer_name,

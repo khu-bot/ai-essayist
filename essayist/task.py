@@ -24,6 +24,7 @@ class LanguageModeling(pl.LightningModule):
         model: AutoModelForCausalLM,
         total_steps: int,
         learning_rate: float,
+        weight_decay: float,
         warmup_rate: float,
         model_save_dir: str,
         optimizer_name: Literal["adam", "deepspeed"] = "adam",
@@ -36,6 +37,7 @@ class LanguageModeling(pl.LightningModule):
 
         self.total_steps = total_steps
         self.learning_rate = learning_rate
+        self.weight_decay = weight_decay
         self.warmup_rate = warmup_rate
         self.model_save_dir = model_save_dir
         self.optimizer_name = optimizer_name
@@ -47,6 +49,7 @@ class LanguageModeling(pl.LightningModule):
                 "model": None,
                 "total_steps": total_steps,
                 "learning_rate": learning_rate,
+                "weight_decay": weight_decay,
                 "warmup_rate": warmup_rate,
                 "model_save_dir": model_save_dir,
                 "tokenizer": None,
@@ -103,9 +106,11 @@ class LanguageModeling(pl.LightningModule):
 
     def configure_optimizers(self) -> Dict:
         if self.optimizer_name == "deepspeed":
-            optimizer = DeepSpeedCPUAdam(self.model.parameters(), lr=self.learning_rate)
+            optimizer = DeepSpeedCPUAdam(self.model.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
         else:
-            optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
+            optimizer = torch.optim.AdamW(
+                self.model.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
+            )
         optimizers = {"optimizer": optimizer}
 
         if self.warmup_rate is not None:

@@ -184,6 +184,7 @@ def main(args: argparse.Namespace):
         precision=args.precision,
     )
     trainer.fit(language_modeling, train_dataloader, dev_dataloader)
+    model.save_pretrained(os.path.join(model_dir, "last_checkpoint"))
     trainer.test(language_modeling, test_dataloader)
 
 

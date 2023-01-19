@@ -141,11 +141,11 @@ class LanguageModeling(pl.LightningModule):
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         checkpoint["model_config"] = self.model.config.to_dict()
-        checkpoint["base_model_prefix"] = self.model.config.model_type
+        checkpoint["model_type"] = self.model.config.model_type
 
     def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
         config_dict = checkpoint["model_config"]
-        config_cls = AutoConfig.for_model(checkpoint["base_model_prefix"])
+        config_cls = AutoConfig.for_model(checkpoint["model_type"])
         config = config_cls.from_dict(config_dict)
         self.model = AutoModelForCausalLM.from_config(config)
         return super().on_load_checkpoint(checkpoint)

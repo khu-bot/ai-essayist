@@ -29,7 +29,6 @@ class LanguageModeling(pl.LightningModule):
         model_save_dir: str,
         optimizer_name: Literal["adam", "deepspeed"] = "adam",
         tokenizer: Optional[AutoTokenizer] = None,
-        prompt_for_logging: Optional[str] = None,
     ):
         super().__init__()
 
@@ -42,7 +41,6 @@ class LanguageModeling(pl.LightningModule):
         self.model_save_dir = model_save_dir
         self.optimizer_name = optimizer_name
         self.tokenizer = tokenizer
-        self.prompt_for_logging = prompt_for_logging  # Used for competition custom logging
 
         self.save_hyperparameters(
             {
@@ -130,12 +128,6 @@ class LanguageModeling(pl.LightningModule):
     def validation_epoch_end(self, outputs) -> None:
         outputs = self.all_gather(outputs)
 
-        if self.prompt_for_logging:
-            generated = self.get_logging_message(self.prompt_for_logging)
-            from proto.request import request_log
-
-            request_log(self.prompt_for_logging, generated)
-
         if self.trainer.is_global_zero and self.model_save_dir:
             val_ppls = [output["val-ppl"].mean() for output in outputs]
             val_ppl_mean = sum(val_ppls) / len(val_ppls)
@@ -157,12 +149,3 @@ class LanguageModeling(pl.LightningModule):
         config = config_cls.from_dict(config_dict)
         self.model = AutoModelForCausalLM.from_config(config)
         return super().on_load_checkpoint(checkpoint)
-
-    def get_logging_message(self, text: str) -> str:
-        """Return prompt, generated text"""
-        input_ids = self.tokenizer(text, return_tensors="pt")["input_ids"].to(self.model.device)
-        output = self.model.generate(
-            input_ids, pad_token_id=self.tokenizer.pad_token_id, do_sample=True, max_length=128
-        ).squeeze(dim=0)
-        generated_text = self.tokenizer.decode(output, skip_special_tokens=True)
-        return generated_text

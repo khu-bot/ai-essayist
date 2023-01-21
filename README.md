@@ -9,9 +9,9 @@
 저희팀은 전반적으로 모델이 글을 쓰는 능력을 최대한 이끌어내는 것을 목표로 데이터셋과 학습방법론, 추론방법론을 설정했습니다.
 덕분에 자동화된 방법으로 어느 정도 일관된 주제에 대해 글을 쓸 수 있는 방법론을 개발했으며 결국 수상은 하지 못했지만 이 덕분에 대회 본선 당시에도 2만자 가량의 수필을 5편이 넘게 생성할 수 있었습니다. 
 
-저희 팀의 최종 작품 ["죽음, 담대하게 마주하다"](https://github.com/khu-bot/ai-essayist/blob/master/docs/%E1%84%8E%E1%85%AC%E1%84%8C%E1%85%A9%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%91%E1%85%AE%E1%86%B7%20-%20%E1%84%8C%E1%85%AE%E1%86%A8%E1%84%8B%E1%85%B3%E1%86%B7%2C%20%E1%84%83%E1%85%A1%E1%86%B7%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%84%80%E1%85%A6%20%E1%84%86%E1%85%A1%E1%84%8C%E1%85%AE%E1%84%92%E1%85%A1%E1%84%83%E1%85%A1.pdf)는 클릭해서 읽어보실 수 있습니다. 이 작품의 본문은 전부 AI가 생성한 문장으로 이뤄져 있습니다. (최종 작성 후 일부 문장들은 단어나 어미 등이 사람에 의해 수정되었습니다.)
+저희 팀의 최종 작품 [**"죽음, 담대하게 마주하다"**](https://github.com/khu-bot/ai-essayist/blob/master/docs/%E1%84%8E%E1%85%AC%E1%84%8C%E1%85%A9%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%91%E1%85%AE%E1%86%B7%20-%20%E1%84%8C%E1%85%AE%E1%86%A8%E1%84%8B%E1%85%B3%E1%86%B7%2C%20%E1%84%83%E1%85%A1%E1%86%B7%E1%84%83%E1%85%A2%E1%84%92%E1%85%A1%E1%84%80%E1%85%A6%20%E1%84%86%E1%85%A1%E1%84%8C%E1%85%AE%E1%84%92%E1%85%A1%E1%84%83%E1%85%A1.pdf)는 클릭해서 읽어보실 수 있습니다. 이 작품의 본문은 전부 AI가 생성한 문장으로 이뤄져 있습니다. (최종 작성 후 일부 문장들은 단어나 어미 등이 사람에 의해 수정되었습니다.)
 
-저희 팀원이 작성한 대회후기는 [여기](https://laonmoon.tistory.com/199)에서 보실 수 있습니다.
+저희 팀원이 작성한 대회후기는 [**여기**](https://laonmoon.tistory.com/199)에서 보실 수 있습니다.
 
 추후 관련 분야의 모델을 개발하거나 연구하시는 분들에게 도움이 되길 바랍니다.
 
@@ -22,9 +22,9 @@
 | [Infer Samples](https://github.com/khu-bot/ai-essayist/blob/master/notebooks/infer_samples.ipynb) | 제목을 가지고 내용을 생성하는 수필 생성모델을 몇 개의 제목으로 내용을 생성해서 테스트합니다. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/khu-bot/ai-essayist/blob/master/notebooks/infer_samples.ipynb) |
 | [Infer Samples With Sum](https://github.com/khu-bot/ai-essayist/blob/master/notebooks/infer_samples_with_sum.ipynb) | 제목과 이전 내용의 요약문들을 가지고 다음 내용을 생성하는 수필 생성모델을 몇 개의 샘플로 내용을 생성해서 테스트합니다. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/khu-bot/ai-essayist/blob/master/notebooks/infer_samples_with_sum.ipynb) |
 | [Write Auto Essay](https://github.com/khu-bot/ai-essayist/blob/master/notebooks/write_auto_essay.ipynb) | 요약모델과 요약을 활용하는 수필 작성 모델을 모두 활용해 글 작성과 글 요약을 반복하며 특정 글자수가 될 때까지 글의 내용을 자동으로 생성합니다. 글 중간중간에 이상한 내용이 생성되곤 하는데 그러다가도 다시 관련된 내용이 생성되기 때문에 마지막에 사람이 보면서 이상한 부분을 없애줘야 합니다. (기본옵션으로 5000토큰을 생성하도록 되어있어 시간이 오래걸립니다. 빠르게 간단히 결과를 보려면 `num_generate_tokens`를 줄여주세요.) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/khu-bot/ai-essayist/blob/master/notebooks/write_auto_essay.ipynb) |
-| [Write Essay With Human](https://github.com/khu-bot/ai-essayist/blob/master/notebooks/write_essay_with_human.ipynb) | 요약모델과 요약을 활용하는 수필 작성 모델을 모두 활용해 글을 자동으로 작성합니다. 다만 모델이 글을 생성하면 사람이 생성한 문장들 중에서 어디까지를 실제로 사용할 지를 결정하면 그 선택된 텍스트만 내용으로 취급됩니다. 저희 팀이 대회에서 글을 생성한 방식입니다. seed를 고정해서 결과를 재현할 수 있습니다. (기본 옵션으로 `backup_indices`가 설정되어 있어 자동으로 문장을 선택해 글이 완성됩니다. 직접 사용할 텍스트를 선택하려면 **[Initial Condition]**에서 `backup_indices`를 빈 리스트로 초기화 해주세요.) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/khu-bot/ai-essayist/blob/master/notebooks/write_essay_with_human.ipynb) |
+| [Write Essay With Human](https://github.com/khu-bot/ai-essayist/blob/master/notebooks/write_essay_with_human.ipynb) | 요약모델과 요약을 활용하는 수필 작성 모델을 모두 활용해 글을 자동으로 작성합니다. 다만 모델이 글을 생성하면 사람이 생성한 문장들 중에서 어디까지를 실제로 사용할 지를 결정하면 그 선택된 텍스트만 내용으로 취급됩니다. 저희 팀이 대회에서 글을 생성한 방식입니다. seed를 고정해서 결과를 재현할 수 있습니다. (기본 옵션으로 `backup_indices`가 설정되어 있어 자동으로 문장을 선택해 글이 완성됩니다. 직접 사용할 텍스트를 선택하려면 [**Initial Condition**] 파트에서 `backup_indices`를 빈 리스트로 초기화 해주세요.) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/khu-bot/ai-essayist/blob/master/notebooks/write_essay_with_human.ipynb) |
 
-- 모델 학습을 제외하고 저희가 모델로 했던 모든 작업은 각 Task마다 오른쪽에 있는 ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg) 버튼으로 모두 실행해볼 수 있습니다. 이미 모든 값이 입력되어 있으므로 [Runtime]-[Run all]로 그냥 실행하셔도 결과를 볼 수 있습니다.
+- 모델 학습을 제외하고 저희가 모델로 했던 모든 작업은 각 Task마다 오른쪽에 있는 ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg) 버튼으로 모두 실행해볼 수 있습니다. 이미 모든 값이 입력되어 있으므로 [**Runtime**]-[**Run all**]로 그냥 실행하셔도 결과를 볼 수 있습니다.
 
 ## Models
 

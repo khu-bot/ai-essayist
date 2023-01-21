@@ -48,3 +48,16 @@ python -m scripts.train \
 ```
 - `--dataset-dir` 폴더에는 train.jsonl, dev.jsonl, test.jsonl파일이 존재해야합니다.
 - json 데이터 하나의 형식은 [Datum](https://github.com/khu-bot/ai-essayist/blob/master/essayist/data.py#L8-L11)을 참고하세요.
+
+### Add Summary
+
+```sh
+$ python -m scripts.add_summary \
+  --data-file-path dataset-v1/train.jsonl \
+  --output-path train-sum.jsonl \
+  --device cuda:0 \
+  --batch-size 256
+```
+- 일반 학습 데이터셋에 요약문을 추가하여 요약문을 활용하는 모델을 개발하기 위해 필요한 스크립트입니다.
+- jsonl형식 데이터파일 하나를 입력 받아 요약문과 함께 저장됩니다.
+- 이 과정에서 원래 하나의 데이터가 `--max-content-length` 글자를 넘어가면 다른 데이터로 분리되기 때문에 데이터의 개수가 늘어나게 됩니다.

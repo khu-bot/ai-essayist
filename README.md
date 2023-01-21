@@ -55,10 +55,10 @@ python -m scripts.train \
 
 ```sh
 $ python -m scripts.add_summary \
-  --data-file-path dataset-v1/train.jsonl \
-  --output-path train-sum.jsonl \
-  --device cuda:0 \
-  --batch-size 256
+    --data-file-path dataset-v1/train.jsonl \
+    --output-path train-sum.jsonl \
+    --device cuda:0 \
+    --batch-size 256
 ```
 - 일반 학습 데이터셋에 요약문을 추가하여 요약문을 활용하는 모델을 개발하기 위해 필요한 스크립트입니다.
 - jsonl형식 데이터파일 하나를 입력 받아 요약문과 함께 저장됩니다.

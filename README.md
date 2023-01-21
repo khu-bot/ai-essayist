@@ -63,3 +63,18 @@ $ python -m scripts.add_summary \
 - 일반 학습 데이터셋에 요약문을 추가하여 요약문을 활용하는 모델을 개발하기 위해 필요한 스크립트입니다.
 - jsonl형식 데이터파일 하나를 입력 받아 요약문과 함께 저장됩니다.
 - 이 과정에서 원래 하나의 데이터가 `--max-content-length` 글자를 넘어가면 다른 데이터로 분리되기 때문에 데이터의 개수가 늘어나게 됩니다.
+
+## Use as Package
+
+essayist모듈을 패키지로 설치해서 import 하여 사용할 수 있습니다.
+
+```sh
+$ pip install git+https://github.com/khu-bot/ai-essayist.git
+```
+- 이렇게 패키지를 설치합니다.
+
+```python
+from essayist.data import LanguageModelingDataset
+from essayist.task import LanguageModeling
+```
+- 설치가 완료되면 이렇게 import 해서 사용할 수 있습니다. 이걸로 custom training 코드를 작성하셔도 되고 [train](https://github.com/khu-bot/ai-essayist/blob/master/scripts/train.py) 스크립트를 그대로 실행하셔도 됩니다.

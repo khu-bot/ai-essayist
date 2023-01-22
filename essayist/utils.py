@@ -11,7 +11,7 @@ ID_TAG_PATTERN = re.compile(r"[@#][a-zA-Z가-힣_.]+")
 SNS_PATTERN = re.compile(r"Insta|insta|인스타|facebook|페이스북|페북|brunch|브런치")
 SOURCE_PATTERN = re.compile(r"출처|©|by")
 BULLET_PATTERN = re.compile(r"^[※*-▶]")
-EMAIL_PATTERN = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
+EMAIL_PATTERN = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}")
 JOB_PATTERN = re.compile(r"일러스트레이터|칼럼|글쓴이|매거진|출판사|작가|(글|사진|그림)[\s.:]")
 DATE_PATTERN = re.compile(r"(20)?\d{2}\.\s?\d{1,2}\.\s?\d{1,2}|(20)?\d{2}년[.\s]\d{1,2}월")
 
